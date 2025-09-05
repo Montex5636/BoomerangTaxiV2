@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excursii Moldova - Boomerang Taxi</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family:'Roboto',sans-serif;
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:linear-gradient(120deg,#0C0F14,#1E1E2F);
+    position:relative;
+}
+body::before {
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:url('city-lights.png') no-repeat center center;
+    background-size:cover;
+    opacity:0.12;
+    animation:moveBg 60s linear infinite;
+    z-index:0;
+}
+@keyframes moveBg { 0%{transform:scale(1) translate(0,0);} 50%{transform:scale(1.1) translate(50px,50px);} 100%{transform:scale(1) translate(0,0);} }
+
+header, main, footer { position:relative; z-index:1; text-align:center; padding:20px; }
+header img { width:160px; margin-bottom:20px; }
+
+h1 { font-family:'Montserrat',sans-serif; font-size:2.8rem; color:#FFD700; text-shadow:2px 2px 10px rgba(0,0,0,0.5); margin-bottom:10px; }
+p.slogan { font-size:1.3rem; color:#ffffffaa; margin-bottom:20px; }
+
+.lang-select { position:absolute; top:20px; right:20px; background:#FFD700; color:#111; border:none; border-radius:5px; padding:5px 10px; font-weight:bold; cursor:pointer; z-index:2; }
+.back-btn { position:absolute; top:20px; left:20px; background:#FFD700; color:#111; font-weight:bold; border:none; border-radius:5px; padding:5px 10px; cursor:pointer; z-index:2; transition:transform 0.2s, box-shadow 0.2s; }
+.back-btn:hover { transform:scale(1.05); box-shadow:0 0 15px #FF6A00; }
+
+.filter-container { margin:20px 0; }
+.filter-container label { margin-right:10px; font-weight:bold; }
+.filter-container select { padding:5px 10px; border-radius:5px; border:none; font-weight:bold; cursor:pointer; }
+
+.tours { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; width:90%; max-width:1200px; margin:0 auto 40px auto; }
+.tour-card { background:#1E1E1E; border-radius:12px; box-shadow:0 0 15px rgba(255,215,0,0.3); overflow:hidden; display:flex; flex-direction:column; transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; position:relative; }
+.tour-card::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(45deg,#FFD700,#FF6A00,#FF0000); opacity:0; transition:opacity 0.4s; border-radius:12px; z-index:0; }
+.tour-card:hover::before { opacity:0.2; }
+.tour-card:hover { transform:translateY(-5px) scale(1.05); box-shadow:0 0 25px #FFD700; }
+.tour-card img { width:100%; height:160px; object-fit:cover; z-index:1; border-bottom:1px solid #FFD70033; }
+.tour-card h3, .tour-card p { margin:10px; z-index:2; position:relative; }
+.tour-card h3 { color:#FFD700; font-size:1.2em; }
+.tour-card p { color:#fff; font-size:1em; margin-bottom:10px; }
+
+.form-container { background:#1E1E1E; padding:25px; border-radius:12px; max-width:600px; margin:20px auto 40px auto; box-shadow:0 0 15px rgba(255,215,0,0.3); }
+.form-container h2 { color:#FFD700; margin-bottom:15px; }
+.form-container label { display:block; margin:10px 0 5px 0; font-weight:bold; }
+.form-container input, .form-container select { width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:15px; font-size:1rem; }
+.form-container button { padding:12px 25px; font-size:1rem; font-weight:bold; border:none; border-radius:50px; background:linear-gradient(45deg,#FF0000,#FF6A00); color:#fff; cursor:pointer; transition: transform 0.3s, box-shadow 0.3s; }
+.form-container button:hover { transform:scale(1.05); box-shadow:0 0 15px #FF6A00; }
+
+#modal { display:none; position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:10; }
+#modalContent { background:#1E1E1E; padding:20px; border-radius:12px; max-width:400px; text-align:center; }
+#modalContent h3 { color:#FFD700; margin-bottom:10px; }
+#modalContent p { color:#fff; margin-bottom:15px; }
+#modalContent button { padding:8px 20px; border-radius:50px; border:none; background:#FFD700; color:#111; font-weight:bold; cursor:pointer; transition: transform 0.2s; }
+#modalContent button:hover { transform:scale(1.05); box-shadow:0 0 15px #FF6A00; }
+
+footer { font-size:0.9rem; color:#ffffff77; text-align:center; margin-top:20px; }
+
+@media(max-width:768px){ h1{font-size:2.2rem;} p.slogan{font-size:1.1rem;} .tour-card img{height:140px;} }
+@media(max-width:480px){ h1{font-size:1.8rem;} p.slogan{font-size:1rem; margin-bottom:25px;} .tour-card img{height:120px;} }
+@media(max-width:400px){ .tours{grid-template-columns:1fr; gap:15px;} .form-container{padding:15px;} }
+</style>
+</head>
+<body>
+
+<select class="lang-select" id="langSelect">
+    <option value="ro">RO</option>
+    <option value="ru">RU</option>
+    <option value="en">EN</option>
+    <option value="ua">UA</option>
+</select>
+<button class="back-btn" onclick="window.location.href='index.html'">Înapoi la Acasă</button>
+
+<header>
+    <img src="logo-boomerang.png" alt="Boomerang Taxi Logo">
+</header>
+
+<main>
+    <h1 id="pageTitle">Excursii Moldova</h1>
+    <p class="slogan" id="pageSlogan">Descoperă frumusețile Moldovei cu ghid profesionist.</p>
+
+    <div class="filter-container">
+        <label for="filterTour">Filtrează turul:</label>
+        <select id="filterTour">
+            <option value="all">Toate</option>
+            <option value="cultural">Cultural</option>
+            <option value="vinuri">Vinuri</option>
+            <option value="natură">Natură</option>
+        </select>
+    </div>
+
+    <div class="tours">
+        <div class="tour-card" data-type="cultural" data-slots="5">
+            <img src="images/tour1.jpg" alt="Tur Chișinău">
+            <h3 id="tour1Title">Tur Chișinău</h3>
+            <p id="tour1Desc">Descoperă capitala cu ghid local și vizite la atracțiile principale.</p>
+        </div>
+        <div class="tour-card" data-type="vinuri" data-slots="3">
+            <img src="images/tour2.jpg" alt="Tur Cricova">
+            <h3 id="tour2Title">Tur Cricova</h3>
+            <p id="tour2Desc">Vizită la cramele celebre și degustare de vinuri.</p>
+        </div>
+        <div class="tour-card" data-type="natură" data-slots="4">
+            <img src="images/tour3.jpg" alt="Tur Orheiul Vechi">
+            <h3 id="tour3Title">Tur Orheiul Vechi</h3>
+            <p id="tour3Desc">Excursie culturală și istorică în peisaje spectaculoase.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Formular de rezervare tur</h2>
+        <form id="tourForm">
+            <label for="name">Nume:</label>
+            <input type="text" id="name" required>
+
+            <label for="phone">Telefon:</label>
+            <input type="tel" id="phone" required placeholder="+373 60 000 000">
+
+            <label for="tour">Turul:</label>
+            <select id="tour" required>
+                <option value="">Selectează turul</option>
+                <option value="Tur Chișinău">Tur Chișinău</option>
+                <option value="Tur Cricova">Tur Cricova</option>
+                <option value="Tur Orheiul Vechi">Tur Orheiul Vechi</option>
+            </select>
+
+            <label for="date">Data turului:</label>
+            <input type="date" id="date" required>
+
+            <label for="time">Ora:</label>
+            <input type="time" id="time" required>
+
+            <button type="submit">Trimite rezervarea</button>
+        </form>
+    </div>
+</main>
+
+<div id="modal">
+    <div id="modalContent">
+        <h3>Rezervare confirmată!</h3>
+        <p id="modalText"></p>
+        <button onclick="document.getElementById('modal').style.display='none'">Închide</button>
+    </div>
+</div>
+
+<footer>
+    📞 Telefon: +373 60 000 000 | 📍 Chișinău, Moldova
+</footer>
+
+<script>
+// Filtrare tururi
+document.getElementById('filterTour').addEventListener('change', ()=>{
+    const value = document.getElementById('filterTour').value;
+    document.querySelectorAll('.tour-card').forEach(card => {
+        const type = card.getAttribute('data-type');
+        card.style.display = (value==='all' || type===value) ? 'flex':'none';
+    });
+});
+
+// Date și ore disponibile
+const tourTimes = {
+    "Tur Chișinău": { dates:["2025-09-10","2025-09-15"], hours:["10:00","14:00"] },
+    "Tur Cricova": { dates:["2025-09-12","2025-09-18"], hours:["12:00","16:00"] },
+    "Tur Orheiul Vechi": { dates:["2025-09-14","2025-09-20"], hours:["09:00","13:00"] },
+};
+document.getElementById('tour').addEventListener('change', function(){
+    const selected = this.value;
+    const dateInput = document.getElementById('date');
+    const timeInput = document.getElementById('time');
+    if(selected && tourTimes[selected]){
+        dateInput.min = tourTimes[selected].dates[0];
+        dateInput.max = tourTimes[selected].dates[1];
+        timeInput.value = tourTimes[selected].hours[0];
+    } else {
+        dateInput.min = ""; 
+        dateInput.max = "";
+        timeInput.value = "";
+    }
+});
+
+// Formular rezervare + email + WhatsApp
+document.getElementById('tourForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const tourName = document.getElementById('tour').value;
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+
+    const tourCard = [...document.querySelectorAll('.tour-card')]
+        .find(c => c.querySelector('h3').textContent === tourName);
+    const slots = parseInt(tourCard.getAttribute('data-slots'));
+
+    if(slots <= 0){
+        alert("Ne pare rău, acest tur este complet!");
+        return;
+    }
+
+    tourCard.setAttribute('data-slots', slots - 1);
+
+    const modal = document.getElementById('modal');
+    const modalText = document.getElementById('modalText');
+    modalText.textContent = `Bună, ${name}! Rezervarea pentru turul "${tourName}" pe data de ${date} la ora ${time} a fost confirmată.`;
+    modal.style.display = 'flex';
+
+    // Trimitere email
+    const adminEmail = "admin@boomerang.taxi";
+    const subject = encodeURIComponent("Rezervare tur Boomerang Taxi");
+    const body = encodeURIComponent(`Nume: ${name}\nTelefon: ${phone}\nTur: ${tourName}\nData: ${date}\nOra: ${time}`);
+    window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
+
+    // Trimitere WhatsApp
+    const adminWhatsApp = "37360000000";
+    const waMessage = encodeURIComponent(`Rezervare tur:\nNume: ${name}\nTelefon: ${phone}\nTur: ${tourName}\nData: ${date}\nOra: ${time}`);
+    window.open(`https://wa.me/${adminWhatsApp}?text=${waMessage}`, "_blank");
+
+    this.reset();
+});
+
+// Selector limbă
+const translations = {
+    pageTitle:{ ro:"Excursii Moldova", ru:"Экскурсии Молдова", en:"Excursions Moldova", ua:"Екскурсії Молдова" },
+    pageSlogan:{ ro:"Descoperă frumusețile Moldovei cu ghid profesionist.", ru:"Откройте красоты Молдовы с профессиональным гидом.", en:"Discover Moldova's beauties with a professional guide.", ua:"Відкрийте красоти Молдови з професійним гідом." },
+};
+document.getElementById('langSelect').addEventListener('change', (e)=>{
+    const lang = e.target.value;
+    document.getElementById('pageTitle').textContent = translations.pageTitle[lang];
+    document.getElementById('pageSlogan').textContent = translations.pageSlogan[lang];
+});
+</script>
+</body>
+</html>

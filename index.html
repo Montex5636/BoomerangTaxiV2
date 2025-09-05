@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boomerang Taxi</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family:'Roboto',sans-serif;
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    background:linear-gradient(120deg,#0C0F14,#1E1E2F);
+    position:relative;
+}
+
+/* Fundal subtil animat */
+body::before {
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:url('city-lights.png') no-repeat center center;
+    background-size:cover;
+    opacity:0.12;
+    animation:moveBg 60s linear infinite;
+    z-index:0;
+}
+@keyframes moveBg { 
+    0%{transform:scale(1) translate(0,0);} 
+    50%{transform:scale(1.1) translate(50px,50px);} 
+    100%{transform:scale(1) translate(0,0);} 
+}
+
+header, main, footer { position:relative; z-index:1; text-align:center; padding:20px; }
+header img { width:160px; margin-bottom:20px; }
+
+h1 {
+    font-family:'Montserrat',sans-serif;
+    font-size:3rem;
+    color:#FFD700;
+    text-shadow:2px 2px 10px rgba(0,0,0,0.5);
+    margin-bottom:10px;
+    animation:fadeInDown 1s ease forwards;
+    opacity:0;
+}
+p.slogan {
+    font-size:1.5rem;
+    color:#ffffffaa;
+    margin-bottom:40px;
+    animation:fadeInUp 1s ease 0.5s forwards;
+    opacity:0;
+}
+
+/* Buton Comandă */
+.btn {
+    display:inline-block;
+    padding:15px 35px;
+    font-size:1.2rem;
+    font-weight:bold;
+    background:linear-gradient(45deg,#FF0000,#FF6A00);
+    color:#fff;
+    border-radius:50px;
+    text-decoration:none;
+    transition:transform 0.4s ease, box-shadow 0.4s ease;
+    animation:fadeInUp 1s ease 1s forwards;
+    opacity:0;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+.btn::after {
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform:scale(0);
+    opacity:0;
+    transition:transform 0.5s ease, opacity 0.5s ease;
+    border-radius:50%;
+}
+.btn:hover::after {
+    transform:scale(1);
+    opacity:1;
+}
+.btn:hover { 
+    transform:scale(1.12); 
+    box-shadow:0 0 25px #FF6A00; 
+}
+
+/* Selector limba */
+.lang-select {
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:#FFD700;
+    color:#111;
+    border:none;
+    border-radius:5px;
+    padding:5px 10px;
+    font-weight:bold;
+    cursor:pointer;
+    z-index:2;
+}
+
+/* Carduri servicii */
+.services {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    width:90%;
+    max-width:1200px;
+    margin:40px auto;
+}
+.service-card {
+    background:#1E1E1E;
+    border-radius:12px;
+    box-shadow:0 0 15px rgba(255,215,0,0.3);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor:pointer;
+    position:relative;
+}
+.service-card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    background:linear-gradient(45deg,#FFD700,#FF6A00,#FF0000);
+    opacity:0;
+    transition:opacity 0.4s ease;
+    border-radius:12px;
+    z-index:0;
+}
+.service-card::after {
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+    transform:scale(0);
+    opacity:0;
+    transition:transform 0.5s ease, opacity 0.5s ease;
+    border-radius:50%;
+    z-index:1;
+}
+.service-card:hover::before { opacity:0.2; }
+.service-card:hover::after { transform:scale(1); opacity:1; }
+.service-card:hover { transform:translateY(-5px) scale(1.05); box-shadow:0 0 25px #FFD700; }
+
+.service-card img { width:100%; height:160px; object-fit:cover; z-index:1; border-bottom:1px solid #FFD70033; }
+.service-card h3, .service-card p { margin:10px; z-index:2; position:relative; }
+.service-card h3 { color:#FFD700; font-size:1.2em; }
+.service-card p { color:#fff; font-size:1em; }
+
+footer { font-size:0.9rem; color:#ffffff77; text-align:center; margin-top:40px; }
+
+@keyframes fadeInDown { 0%{opacity:0;transform:translateY(-20px);} 100%{opacity:1;transform:translateY(0);} }
+@keyframes fadeInUp { 0%{opacity:0;transform:translateY(20px);} 100%{opacity:1;transform:translateY(0);} }
+
+@media(max-width:768px){
+    h1{font-size:2.2rem;}
+    p.slogan{font-size:1.2rem;}
+    .btn{padding:12px 25px; font-size:1rem;}
+    .services { grid-template-columns:1fr; }
+}
+
+@media(max-width:480px){
+    h1{font-size:1.8rem;}
+    p.slogan{font-size:1rem; margin-bottom:25px;}
+    .btn{padding:10px 20px; font-size:0.95rem;}
+    .service-card img { height:140px; }
+    .services { gap:15px; }
+}
+</style>
+</head>
+<body>
+<select class="lang-select" id="langSelect">
+    <option value="ro">RO</option>
+    <option value="ru">RU</option>
+    <option value="en">EN</option>
+    <option value="ua">UA</option>
+</select>
+
+<header>
+    <img src="logo-boomerang.png" alt="Boomerang Taxi Logo">
+</header>
+
+<main>
+    <h1 id="mainTitle">Boomerang Taxi</h1>
+    <p class="slogan" id="mainSlogan">Rapid. Sigur. Oricând.</p>
+    <a class="btn" id="orderBtn">Comandă acum</a>
+
+    <div class="services">
+        <div class="service-card" onclick="window.location.href='rezervare.html'">
+            <img src="images/reservare-auto.jpg" alt="Rezervare auto 24/7">
+            <h3 id="service1Title">Rezervare auto 24/7</h3>
+            <p id="service1Desc">Comandă rapid și sigur o mașină disponibilă în orice moment.</p>
+        </div>
+        <div class="service-card" onclick="window.location.href='arenda.html'">
+            <img src="images/arenda-auto.jpg" alt="Arenda Auto">
+            <h3 id="service2Title">Arendă Auto</h3>
+            <p id="service2Desc">Închiriază o mașină confortabilă pentru perioada dorită.</p>
+        </div>
+        <div class="service-card" onclick="window.location.href='excursii.html'">
+            <img src="images/excursii.jpg" alt="Excursii Moldova">
+            <h3 id="service3Title">Excursii Moldova</h3>
+            <p id="service3Desc">Tururi și excursii turistice în Moldova cu ghid profesionist.</p>
+        </div>
+        <div class="service-card" onclick="window.location.href='legalizare.html'">
+            <img src="images/legalizare-auto.jpg" alt="Legalizare auto în taxi">
+            <h3 id="service4Title">Legalizare Auto în Taxi</h3>
+            <p id="service4Desc">Servicii de legalizare rapidă a autovehiculelor în regim taxi.</p>
+        </div>
+    </div>    
+</main>
+
+<footer>
+    📞 Telefon: +373 60 000 000 | 📍 Chișinău, Moldova
+</footer>
+
+<script>
+document.getElementById('orderBtn').addEventListener('click', function(){
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    if (/android/i.test(ua)) window.location.href = "https://play.google.com/store/apps/details?id=com.boomerang.taxi";
+    else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) window.location.href = "https://apps.apple.com/app/id6737691364";
+    else alert("Pentru a comanda taxi-ul, vă rugăm să instalați aplicația Boomerang Taxi pe telefonul mobil.");
+});
+
+const translations = {
+    mainTitle: { ro:"Boomerang Taxi", ru:"Бумеранг Такси", en:"Boomerang Taxi", ua:"Бумеранг Таксі" },
+    mainSlogan: { ro:"Rapid. Sigur. Oricând.", ru:"Быстро. Надежно. Всегда.", en:"Fast. Safe. Anytime.", ua:"Швидко. Надійно. Завжди." },
+    orderBtn: { ro:"Comandă acum", ru:"Заказать сейчас", en:"Order Now", ua:"Замовити зараз" },
+
+    service1Title:{ ro:"Rezervare auto 24/7", ru:"Бронирование авто 24/7", en:"Car Reservation 24/7", ua:"Бронювання авто 24/7" },
+    service1Desc:{ ro:"Comandă rapid și sigur o mașină disponibilă în orice moment.", ru:"Быстрое и безопасное бронирование автомобиля в любое время.", en:"Quickly and safely book a car anytime.", ua:"Швидке та безпечне бронювання авто в будь-який час." },
+
+    service2Title:{ ro:"Arendă Auto", ru:"Аренда авто", en:"Car Rental", ua:"Оренда авто" },
+    service2Desc:{ ro:"Închiriază o mașină confortabilă pentru perioada dorită.", ru:"Арендуйте комфортабельный автомобиль на нужный период.", en:"Rent a comfortable car for desired period.", ua:"Орендуйте комфортне авто на потрібний період." },
+
+    service3Title:{ ro:"Excursii Moldova", ru:"Экскурсии Молдова", en:"Excursions Moldova", ua:"Екскурсії Молдова" },
+    service3Desc:{ ro:"Tururi și excursii turistice în Moldova cu ghid profesionist.", ru:"Туры и экскурсии по Молдове с профессиональным гидом.", en:"Tours and excursions in Moldova with a professional guide.", ua:"Тури та екскурсії по Молдові з професійним гідом." },
+
+    service4Title:{ ro:"Legalizare Auto în Taxi", ru:"Легализация авто в такси", en:"Car Legalization in Taxi", ua:"Легалізація авто в таксі" },
+    service4Desc:{ ro:"Servicii de legalizare rapidă a autovehiculelor în regim taxi.", ru:"Быстрая легализация автомобилей в режиме такси.", en:"Fast vehicle legalization in taxi service.", ua:"Швидка легалізація автомобілів у режимі таксі." }
+};
+
+document.getElementById('langSelect').addEventListener('change', (e)=>{
+    const lang = e.target.value;
+    document.getElementById('mainTitle').textContent = translations.mainTitle[lang];
+    document.getElementById('mainSlogan').textContent = translations.mainSlogan[lang];
+    document.getElementById('orderBtn').textContent = translations.orderBtn[lang];
+
+    document.getElementById('service1Title').textContent = translations.service1Title[lang];
+    document.getElementById('service1Desc').textContent = translations.service1Desc[lang];
+
+    document.getElementById('service2Title').textContent = translations.service2Title[lang];
+    document.getElementById('service2Desc').textContent = translations.service2Desc[lang];
+
+    document.getElementById('service3Title').textContent = translations.service3Title[lang];
+    document.getElementById('service3Desc').textContent = translations.service3Desc[lang];
+
+    document.getElementById('service4Title').textContent = translations.service4Title[lang];
+    document.getElementById('service4Desc').textContent = translations.service4Desc[lang];
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rezervare Auto 24/7 - Boomerang Taxi</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family:'Roboto',sans-serif;
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:linear-gradient(120deg,#0C0F14,#1E1E2F);
+    position:relative;
+}
+body::before {
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:url('city-lights.png') no-repeat center center;
+    background-size:cover;
+    opacity:0.12;
+    animation:moveBg 60s linear infinite;
+    z-index:0;
+}
+@keyframes moveBg { 0%{transform:scale(1) translate(0,0);} 50%{transform:scale(1.1) translate(50px,50px);} 100%{transform:scale(1) translate(0,0);} }
+
+header, main, footer { position:relative; z-index:1; text-align:center; padding:20px; }
+header img { width:160px; margin-bottom:20px; }
+
+h1 { font-family:'Montserrat',sans-serif; font-size:2.8rem; color:#FFD700; text-shadow:2px 2px 10px rgba(0,0,0,0.5); margin-bottom:10px; }
+p.slogan { font-size:1.3rem; color:#ffffffaa; margin-bottom:20px; }
+
+.lang-select { position:absolute; top:20px; right:20px; background:#FFD700; color:#111; border:none; border-radius:5px; padding:5px 10px; font-weight:bold; cursor:pointer; z-index:2; }
+.back-btn { position:absolute; top:20px; left:20px; background:#FFD700; color:#111; font-weight:bold; border:none; border-radius:5px; padding:5px 10px; cursor:pointer; z-index:2; transition:transform 0.2s, box-shadow 0.2s; }
+.back-btn:hover { transform:scale(1.05); box-shadow:0 0 15px #FF6A00; }
+
+.form-container { background:#1E1E1E; padding:25px; border-radius:12px; max-width:600px; margin:0 auto 40px auto; box-shadow:0 0 15px rgba(255,215,0,0.3); }
+.form-container h2 { color:#FFD700; margin-bottom:15px; }
+.form-container label { display:block; margin:10px 0 5px 0; font-weight:bold; }
+.form-container input, .form-container select { width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:15px; font-size:1rem; }
+.form-container button { padding:12px 25px; font-size:1rem; font-weight:bold; border:none; border-radius:50px; background:linear-gradient(45deg,#FF0000,#FF6A00); color:#fff; cursor:pointer; transition: transform 0.3s, box-shadow 0.3s; }
+.form-container button:hover { transform:scale(1.05); box-shadow:0 0 15px #FF6A00; }
+
+#priceDisplay { color:#FFD700; font-weight:bold; font-size:1.1rem; margin-bottom:15px; }
+
+#modal { display:none; position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:10; }
+#modalContent { background:#1E1E1E; padding:20px; border-radius:12px; max-width:400px; text-align:center; }
+#modalContent h3 { color:#FFD700; margin-bottom:10px; }
+#modalContent p { color:#fff; margin-bottom:15px; }
+#modalContent button { padding:8px 20px; border-radius:50px; border:none; background:#FFD700; color:#111; font-weight:bold; cursor:pointer; transition: transform 0.2s; }
+#modalContent button:hover { transform:scale(1.05); box-shadow:0 0 15px #FF6A00; }
+
+footer { font-size:0.9rem; color:#ffffff77; text-align:center; margin-top:20px; }
+
+@media(max-width:768px){ h1{font-size:2.2rem;} p.slogan{font-size:1.1rem;} }
+@media(max-width:480px){ h1{font-size:1.8rem;} p.slogan{font-size:1rem; margin-bottom:25px;} }
+</style>
+</head>
+<body>
+
+<select class="lang-select" id="langSelect">
+    <option value="ro">RO</option>
+    <option value="ru">RU</option>
+    <option value="en">EN</option>
+    <option value="ua">UA</option>
+</select>
+<button class="back-btn" onclick="window.location.href='index.html'">Înapoi la Acasă</button>
+
+<header>
+    <img src="logo-boomerang.png" alt="Boomerang Taxi Logo">
+</header>
+
+<main>
+    <h1 id="pageTitle">Rezervare Auto 24/7</h1>
+    <p class="slogan" id="pageSlogan">Comandă rapid un taxi disponibil oriunde și oricând.</p>
+
+    <div class="form-container">
+        <h2>Rezervă Taxi</h2>
+        <form id="taxiForm">
+            <label for="name">Nume complet:</label>
+            <input type="text" id="name" required>
+
+            <label for="phone">Telefon:</label>
+            <input type="tel" id="phone" required placeholder="+373 60 000 000">
+
+            <label for="city">Oraș:</label>
+            <select id="city" required>
+                <option value="">Selectează orașul</option>
+                <option value="Chișinău">Chișinău</option>
+                <option value="Bălți">Bălți</option>
+                <option value="Orhei">Orhei</option>
+                <option value="Soroca">Soroca</option>
+                <option value="Cahul">Cahul</option>
+            </select>
+
+            <label for="pickup">Adresă ridicare:</label>
+            <input type="text" id="pickup" required>
+
+            <label for="destination">Destinație:</label>
+            <input type="text" id="destination" required>
+
+            <label for="date">Data:</label>
+            <input type="date" id="date" required>
+
+            <label for="time">Ora:</label>
+            <input type="time" id="time" required>
+
+            <label for="distance">Distanță (km):</label>
+            <input type="number" id="distance" required placeholder="Introduceți distanța">
+
+            <label for="zone">Zona:</label>
+            <select id="zone" required>
+                <option value="">Selectează zona</option>
+                <option value="oras">În oraș</option>
+                <option value="afaralos">În afara orașului</option>
+            </select>
+
+            <p id="priceDisplay">Preț estimativ: 37 lei</p>
+
+            <button type="submit">Trimite Comanda</button>
+        </form>
+    </div>
+</main>
+
+<div id="modal">
+    <div id="modalContent">
+        <h3>Rezervare primită!</h3>
+        <p id="modalText"></p>
+        <button onclick="document.getElementById('modal').style.display='none'">Închide</button>
+    </div>
+</div>
+
+<footer>
+    📞 Telefon: +373 60 000 000 | 📍 Chișinău, Moldova
+</footer>
+
+<script>
+// Calculare preț
+function calculatePrice() {
+    const basePrice = 37;
+    const distance = parseFloat(document.getElementById('distance').value) || 0;
+    const zone = document.getElementById('zone').value;
+    let price = basePrice;
+
+    if(zone === "oras") price += distance * 5;
+    else if(zone === "afaralos") price += distance * 10;
+
+    document.getElementById('priceDisplay').textContent = `Preț estimativ: ${price} lei`;
+}
+
+document.getElementById('distance').addEventListener('input', calculatePrice);
+document.getElementById('zone').addEventListener('change', calculatePrice);
+
+// Formular
+document.getElementById('taxiForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const city = document.getElementById('city').value;
+    const pickup = document.getElementById('pickup').value.trim();
+    const destination = document.getElementById('destination').value.trim();
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const distance = document.getElementById('distance').value;
+    const zone = document.getElementById('zone').value;
+    const price = document.getElementById('priceDisplay').textContent.replace("Preț estimativ: ", "");
+
+    const modal = document.getElementById('modal');
+    const modalText = document.getElementById('modalText');
+    modalText.textContent = `Bună, ${name}! Comanda ta pentru taxi în ${city} de la "${pickup}" la "${destination}" pe data ${date} la ora ${time} a fost primită. Preț estimativ: ${price}`;
+    modal.style.display = 'flex';
+
+    // Trimitere email
+    const adminEmail = "admin@boomerang.taxi";
+    const subject = encodeURIComponent("Rezervare Taxi 24/7");
+    const body = encodeURIComponent(`Nume: ${name}
+Telefon: ${phone}
+Oraș: ${city}
+Ridicare: ${pickup}
+Destinație: ${destination}
+Data: ${date}
+Ora: ${time}
+Distanță: ${distance} km
+Zona: ${zone}
+Preț estimativ: ${price}`);
+    window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
+
+    // Trimitere WhatsApp
+    const adminWhatsApp = "37360000000";
+    const waMessage = encodeURIComponent(`Rezervare Taxi 24/7:
+Nume: ${name}
+Telefon: ${phone}
+Oraș: ${city}
+Ridicare: ${pickup}
+Destinație: ${destination}
+Data: ${date}
+Ora: ${time}
+Distanță: ${distance} km
+Zona: ${zone}
+Preț estimativ: ${price}`);
+    window.open(`https://wa.me/${adminWhatsApp}?text=${waMessage}`, "_blank");
+
+    this.reset();
+    document.getElementById('priceDisplay').textContent = "Preț estimativ: 37 lei";
+});
+
+// Selector limbă
+const translations = {
+    pageTitle:{ ro:"Rezervare Auto 24/7", ru:"Бронирование авто 24/7", en:"Car Reservation 24/7", ua:"Бронювання авто 24/7" },
+    pageSlogan:{ ro:"Comandă rapid un taxi disponibil oriunde și oricând.", ru:"Быстрое бронирование такси в любое время.", en:"Quickly book a taxi anytime.", ua:"Швидке бронювання таксі у будь-який час." }
+};
+
+document.getElementById('langSelect').addEventListener('change', e=>{
+    const lang = e.target.value;
+    document.getElementById('pageTitle').textContent = translations.pageTitle[lang];
+    document.getElementById('pageSlogan').textContent = translations.pageSlogan[lang];
+});
+</script>
+
+</body>
+</html>

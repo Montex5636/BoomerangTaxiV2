@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arendă Auto - Boomerang Taxi</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family:'Roboto',sans-serif;
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:linear-gradient(120deg,#0C0F14,#1E1E2F);
+    position:relative;
+}
+body::before {
+    content:'';
+    position:absolute;
+    top:-50%;
+    left:-50%;
+    width:200%;
+    height:200%;
+    background:url('city-lights.png') no-repeat center center;
+    background-size:cover;
+    opacity:0.12;
+    animation:moveBg 60s linear infinite;
+    z-index:0;
+}
+@keyframes moveBg { 0%{transform:scale(1) translate(0,0);} 50%{transform:scale(1.1) translate(50px,50px);} 100%{transform:scale(1) translate(0,0);} }
+
+header, main, footer { position:relative; z-index:1; text-align:center; padding:20px; }
+header img { width:160px; margin-bottom:20px; }
+
+h1 {
+    font-family:'Montserrat',sans-serif;
+    font-size:2.8rem;
+    color:#FFD700;
+    text-shadow:2px 2px 10px rgba(0,0,0,0.5);
+    margin-bottom:10px;
+}
+p.slogan {
+    font-size:1.3rem;
+    color:#ffffffaa;
+    margin-bottom:40px;
+}
+
+.lang-select {
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:#FFD700;
+    color:#111;
+    border:none;
+    border-radius:5px;
+    padding:5px 10px;
+    font-weight:bold;
+    cursor:pointer;
+    z-index:2;
+}
+
+.back-btn {
+    position:absolute;
+    top:20px;
+    left:20px;
+    background:#FFD700;
+    color:#111;
+    font-weight:bold;
+    border:none;
+    border-radius:5px;
+    padding:5px 10px;
+    cursor:pointer;
+    z-index:2;
+    transition:transform 0.2s, box-shadow 0.2s;
+}
+.back-btn:hover {
+    transform:scale(1.05);
+    box-shadow:0 0 15px #FF6A00;
+}
+
+.cars {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    width:90%;
+    max-width:1200px;
+    margin:0 auto 40px auto;
+}
+.car-card {
+    background:#1E1E1E;
+    border-radius:12px;
+    box-shadow:0 0 15px rgba(255,215,0,0.3);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor:pointer;
+    position:relative;
+}
+.car-card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    background:linear-gradient(45deg,#FFD700,#FF6A00,#FF0000);
+    opacity:0;
+    transition:opacity 0.4s;
+    border-radius:12px;
+    z-index:0;
+}
+.car-card:hover::before { opacity:0.2; }
+.car-card:hover { transform:translateY(-5px) scale(1.05); box-shadow:0 0 25px #FFD700; }
+
+.car-card img { width:100%; height:160px; object-fit:cover; z-index:1; border-bottom:1px solid #FFD70033; }
+.car-card h3, .car-card p { margin:10px; z-index:2; position:relative; }
+.car-card h3 { color:#FFD700; font-size:1.2em; }
+.car-card p { color:#fff; font-size:1em; margin-bottom:10px; }
+
+.form-container {
+    background:#1E1E1E;
+    padding:25px;
+    border-radius:12px;
+    max-width:600px;
+    margin:20px auto 40px auto;
+    box-shadow:0 0 15px rgba(255,215,0,0.3);
+}
+.form-container h2 {
+    color:#FFD700;
+    margin-bottom:15px;
+}
+.form-container label {
+    display:block;
+    margin:10px 0 5px 0;
+    font-weight:bold;
+}
+.form-container input, .form-container select {
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    margin-bottom:15px;
+    font-size:1rem;
+}
+.form-container button {
+    padding:12px 25px;
+    font-size:1rem;
+    font-weight:bold;
+    border:none;
+    border-radius:50px;
+    background:linear-gradient(45deg,#FF0000,#FF6A00);
+    color:#fff;
+    cursor:pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.form-container button:hover {
+    transform:scale(1.05);
+    box-shadow:0 0 15px #FF6A00;
+}
+
+#successMsg {
+    color:#00FF00;
+    font-weight:bold;
+    margin-top:10px;
+    display:none;
+    animation:fadeIn 0.6s ease forwards;
+}
+@keyframes fadeIn { 0%{opacity:0;} 100%{opacity:1;} }
+
+footer { font-size:0.9rem; color:#ffffff77; text-align:center; margin-top:20px; }
+
+@media(max-width:768px){
+    h1{font-size:2.2rem;}
+    p.slogan{font-size:1.1rem;}
+    .car-card img { height:140px; }
+}
+@media(max-width:480px){
+    h1{font-size:1.8rem;}
+    p.slogan{font-size:1rem; margin-bottom:25px;}
+    .car-card img { height:120px; }
+}
+@media(max-width:400px){
+    .cars { grid-template-columns:1fr; gap:15px; }
+    .form-container { padding:15px; }
+}
+</style>
+</head>
+<body>
+<select class="lang-select" id="langSelect">
+    <option value="ro">RO</option>
+    <option value="ru">RU</option>
+    <option value="en">EN</option>
+    <option value="ua">UA</option>
+</select>
+
+<button class="back-btn" onclick="window.location.href='index.html'">Înapoi la Acasă</button>
+
+<header>
+    <img src="logo-boomerang.png" alt="Boomerang Taxi Logo">
+</header>
+
+<main>
+    <h1 id="pageTitle">Arendă Auto</h1>
+    <p class="slogan" id="pageSlogan">Închiriază rapid și ușor o mașină confortabilă.</p>
+
+    <div class="cars">
+        <div class="car-card">
+            <a href="standard.html"></a>
+            <img src="images/standard.jpg" alt="Categorie Standard">
+            <h3 id="car1Title">Standard</h3>
+            <p id="car1Desc">Mașini accesibile și confortabile pentru deplasări cotidiene.</p>
+        </div>
+        <div class="car-card">
+            <a href="confort.html"></a>
+            <img src="images/confort.jpg" alt="Categorie Confort">
+            <h3 id="car2Title">Confort</h3>
+            <p id="car2Desc">Lux și performanță pentru o experiență de condus superioară.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Formular de rezervare</h2>
+        <form id="rentalForm">
+            <label for="name">Nume:</label>
+            <input type="text" id="name" required>
+
+            <label for="phone">Telefon:</label>
+            <input type="tel" id="phone" required placeholder="+373 60 000 000">
+
+            <label for="car">Categoria:</label>
+            <select id="car" required>
+                <option value="">Selectează categoria</option>
+                <option value="Standard">Standard</option>
+                <option value="Confort">Confort</option>
+            </select>
+
+            <label for="date">Data închirierii:</label>
+            <input type="date" id="date" required>
+
+            <label for="time">Ora:</label>
+            <input type="time" id="time" required>
+
+            <button type="submit">Trimite rezervarea</button>
+            <p id="successMsg">Rezervarea a fost trimisă cu succes! Vom reveni curând.</p>
+        </form>
+    </div>
+</main>
+
+<footer>
+    📞 Telefon: +373 60 000 000 | 📍 Chișinău, Moldova
+</footer>
+
+<script>
+// Traduce pagina
+const translations = {
+    pageTitle: { ro:"Arendă Auto", ru:"Аренда Авто", en:"Car Rental", ua:"Оренда авто" },
+    pageSlogan: { ro:"Închiriază rapid și ușor o mașină confortabilă.", ru:"Быстро и легко арендуйте комфортабельный автомобиль.", en:"Quickly and easily rent a comfortable car.", ua:"Швидко та легко орендуйте комфортне авто." },
+
+    car1Title:{ ro:"Standard", ru:"Стандарт", en:"Standard", ua:"Стандарт" },
+    car1Desc:{ ro:"Mașini accesibile și confortabile pentru deplasări cotidiene.", ru:"Доступные и комфортабельные автомобили для повседневных поездок.", en:"Affordable and comfortable cars for daily trips.", ua:"Доступні та комфортні авто для щоденних поїздок." },
+
+    car2Title:{ ro:"Confort", ru:"Комфорт", en:"Comfort", ua:"Комфорт" },
+    car2Desc:{ ro:"Lux și performanță pentru o experiență de condus superioară.", ru:"Роскошь и производительность для превосходного опыта вождения.", en:"Luxury and performance for a superior driving experience.", ua:"Розкіш та продуктивність для відмінного досвіду водіння." }
+};
+
+document.getElementById('langSelect').addEventListener('change', (e)=>{
+    const lang = e.target.value;
+    document.getElementById('pageTitle').textContent = translations.pageTitle[lang];
+    document.getElementById('pageSlogan').textContent = translations.pageSlogan[lang];
+
+    document.getElementById('car1Title').textContent = translations.car1Title[lang];
+    document.getElementById('car1Desc').textContent = translations.car1Desc[lang];
+
+    document.getElementById('car2Title').textContent = translations.car2Title[lang];
+    document.getElementById('car2Desc').textContent = translations.car2Desc[lang];
+});
+
+// Funcționalitate formular
+document.getElementById('rentalForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const car = document.getElementById('car').value;
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+
+    if(name && phone && car && date && time){
+        const successMsg = document.getElementById('successMsg');
+        successMsg.style.display = 'block';
+        setTimeout(()=>{ successMsg.style.display = 'none'; }, 5000);
+        this.reset();
+    } else {
+        alert("Te rugăm să completezi toate câmpurile!");
+    }
+});
+
+// Click pe card selectează categoria
+document.querySelectorAll('.car-card').forEach((card,index)=>{
+    card.addEventListener('click', ()=>{
+        const carSelect = document.getElementById('car');
+        carSelect.selectedIndex = index+1; // +1 pentru placeholder
+        window.scrollTo({top: document.getElementById('rentalForm').offsetTop, behavior:'smooth'});
+    });
+});
+</script>
+</body>
+</html>
